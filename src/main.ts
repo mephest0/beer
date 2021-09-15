@@ -4,7 +4,6 @@ import { join } from 'path'
 
 const PORT_NUMBER = 31337
 
-console.log('hello world');
 const app = new Koa();
 
 // timer-and-error middleware
@@ -20,6 +19,32 @@ app.use(async (ctx, next) => {
   
   console.log(`Request to ${ctx.request.path} took ${Date.now() - time}ms`)
 })
+
+// api call handler, or pass on to static file middleware
+app.use(async (ctx, next) => {
+  // all other requests than those for /api/* are passed on
+  if (!ctx.request.path.startsWith('/api/')) return await next();
+
+  const path = ctx.request.path
+    .replace(/^\/api\//, '')
+    .replace(/\/$/, '')
+
+  console.log('api path [' + path + ']');
+  switch (path) {
+    case 'now':
+    case 'current':
+      // TODO insert logic
+      ctx.body = { 'probe0': 69 }
+      break
+    default:
+      throw new Error(`API call for unsupported request [${path}]`)
+  }
+  
+  ctx.response.type = 'application/json'
+})
+
+// static file handler
+app.use(serve(join('./static'), { defer: true }))
 
 app.listen(PORT_NUMBER)
 console.log(`all set up, listening on port ${PORT_NUMBER}`)
