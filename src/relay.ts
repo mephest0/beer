@@ -1,5 +1,5 @@
 import rpio from 'rpio'
-const COOLER_RELAY_GPIO = 4
+const COOLER_RELAY_GPIO = 7
 
 export const toggleRelay = () => {
   const nowState = readRelay()
