@@ -1,11 +1,11 @@
-import Koa from 'koa';
-import serve from 'koa-static';
+import Koa from 'koa'
+import serve from 'koa-static'
 import { join } from 'path'
 import { toggleRelay } from './relay'
 
 const PORT_NUMBER = 31337
 
-const app = new Koa();
+const app = new Koa()
 
 // timer-and-error middleware
 app.use(async (ctx, next) => {
@@ -30,7 +30,7 @@ app.use(async (ctx, next) => {
     .replace(/^\/api\//, '')
     .replace(/\/$/, '')
 
-  console.log('api path [' + path + ']');
+  console.log('api path [' + path + ']')
   switch (path) {
     case 'now':
     case 'current':
