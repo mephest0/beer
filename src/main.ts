@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import serve from 'koa-static';
 import { join } from 'path'
+import { toggleRelay } from './relay'
 
 const PORT_NUMBER = 31337
 
@@ -35,6 +36,9 @@ app.use(async (ctx, next) => {
     case 'current':
       // TODO insert logic
       ctx.body = { 'probe0': 69 }
+      break
+    case 'toggle':
+      toggleRelay()
       break
     default:
       throw new Error(`API call for unsupported request [${path}]`)
