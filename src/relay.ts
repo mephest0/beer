@@ -1,10 +1,13 @@
-import { Gpio } from 'onoff'
-
+import rpio from 'rpio'
 const COOLER_RELAY_GPIO = 4
-const RELAY_CONTROL = new Gpio(COOLER_RELAY_GPIO, 'out')
 
 export const toggleRelay = () => {
-  const state = RELAY_CONTROL.readSync()
+  
+  setRelay(!readRelay())
+}
 
-  RELAY_CONTROL.writeSync(state ? 0 : 1)
+const readRelay = () => rpio.read(COOLER_RELAY_GPIO)
+
+const setRelay = (state: 0 | 1 | boolean) => {
+  rpio.write(COOLER_RELAY_GPIO, state ? 1 : 0)
 }
