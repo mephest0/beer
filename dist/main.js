@@ -27,6 +27,7 @@ app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
     catch (e) {
         ctx.body = (ctx.body || '') + '<span class="server">there was an error<br />' + (e.message || e.toString()) + '</span>';
         ctx.status = 400;
+        console.error(e);
     }
     console.log(`Request to ${ctx.request.path} took ${Date.now() - time}ms`);
 }));
