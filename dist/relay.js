@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.toggleRelay = void 0;
 const rpio_1 = __importDefault(require("rpio"));
 const COOLER_RELAY_GPIO = 7;
+rpio_1.default.open(COOLER_RELAY_GPIO, rpio_1.default.OUTPUT, rpio_1.default.LOW);
 const toggleRelay = () => {
     const nowState = readRelay();
     console.log('nowState', nowState);
