@@ -7,10 +7,14 @@ exports.toggleRelay = void 0;
 const rpio_1 = __importDefault(require("rpio"));
 const COOLER_RELAY_GPIO = 4;
 const toggleRelay = () => {
+    const nowState = readRelay();
+    console.log('nowState', nowState);
     setRelay(!readRelay());
 };
 exports.toggleRelay = toggleRelay;
 const readRelay = () => rpio_1.default.read(COOLER_RELAY_GPIO);
 const setRelay = (state) => {
-    rpio_1.default.write(COOLER_RELAY_GPIO, state ? 1 : 0);
+    const nuValue = state ? 1 : 0;
+    console.log('nuValue', nuValue);
+    rpio_1.default.write(COOLER_RELAY_GPIO, nuValue);
 };
