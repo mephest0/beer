@@ -2,6 +2,7 @@ import Koa from 'koa'
 import serve from 'koa-static'
 import { join } from 'path'
 import { toggleRelay } from './relay'
+import { getSettings, sendEntry } from './firebase'
 
 const PORT_NUMBER = 31337
 
@@ -41,6 +42,14 @@ app.use(async (ctx, next) => {
     case 'toggle':
       toggleRelay()
       break
+    case 'firestore_test':
+      await sendEntry({ humidity: Date.now() % 13, temperature: Date.now() % 37 });
+      ctx.body = { ok: true, mockData: true };
+      break;
+    case 'get_settings':
+      ctx.body = await getSettings();
+      ctx.body.timestamp = Date.now();
+      break;
     default:
       throw new Error(`API call for unsupported request [${path}]`)
   }

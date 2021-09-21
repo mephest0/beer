@@ -16,6 +16,7 @@ const koa_1 = __importDefault(require("koa"));
 const koa_static_1 = __importDefault(require("koa-static"));
 const path_1 = require("path");
 const relay_1 = require("./relay");
+const firebase_1 = require("./firebase");
 const PORT_NUMBER = 31337;
 const app = new koa_1.default();
 // timer-and-error middleware
@@ -48,6 +49,14 @@ app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
             break;
         case 'toggle':
             (0, relay_1.toggleRelay)();
+            break;
+        case 'firestore_test':
+            yield (0, firebase_1.sendEntry)({ humidity: Date.now() % 13, temperature: Date.now() % 37 });
+            ctx.body = { ok: true, mockData: true };
+            break;
+        case 'get_settings':
+            ctx.body = yield (0, firebase_1.getSettings)();
+            ctx.body.timestamp = Date.now();
             break;
         default:
             throw new Error(`API call for unsupported request [${path}]`);
