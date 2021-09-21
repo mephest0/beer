@@ -22,6 +22,10 @@ The target temperature and polling rate is set in a Firestore document at `contr
 
 Every time the temperature and humidity is read, the results are stored in the `entries` collection in Firestore.
 
+### Electronics
+
+`todo`
+
 ## License
 
 Do whatever you wish. MIT License or whatever 🤷‍♀️
