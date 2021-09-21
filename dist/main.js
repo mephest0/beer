@@ -15,10 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const koa_1 = __importDefault(require("koa"));
 const koa_static_1 = __importDefault(require("koa-static"));
 const path_1 = require("path");
-const relay_1 = require("./relay");
-const firebase_1 = require("./firebase");
+const thermostat_1 = require("./thermostat");
 const PORT_NUMBER = 31337;
 const app = new koa_1.default();
+thermostat_1.thermostat.start();
 // timer-and-error middleware
 app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
     const time = Date.now();
@@ -42,21 +42,26 @@ app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
         .replace(/\/$/, '');
     console.log('api path [' + path + ']');
     switch (path) {
-        case 'now':
-        case 'current':
-            // TODO insert logic
-            ctx.body = { 'probe0': 69 };
+        case 'get_running':
+            ctx.body = thermostat_1.thermostat.isRunning();
             break;
-        case 'toggle':
-            (0, relay_1.toggleRelay)();
-            break;
-        case 'firestore_test':
-            yield (0, firebase_1.sendEntry)({ humidity: Date.now() % 13, temperature: Date.now() % 37 });
-            ctx.body = { ok: true, mockData: true };
+        case 'get_sensors':
+            ctx.body = thermostat_1.thermostat.getSensorData();
             break;
         case 'get_settings':
-            ctx.body = yield (0, firebase_1.getSettings)();
-            ctx.body.timestamp = Date.now();
+            ctx.body = thermostat_1.thermostat.getSettings();
+            break;
+        case 'start':
+            yield thermostat_1.thermostat.start();
+            ctx.body = { ok: true };
+            break;
+        case 'start_force':
+            yield thermostat_1.thermostat.start(true);
+            ctx.body = { ok: true };
+            break;
+        case 'stop':
+            yield thermostat_1.thermostat.stop();
+            ctx.body = { ok: true };
             break;
         default:
             throw new Error(`API call for unsupported request [${path}]`);

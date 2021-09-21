@@ -1,4 +1,5 @@
-import admin from 'firebase-admin';
+import admin from 'firebase-admin'
+import { Settings } from './thermostat'
 
 const creds = require('../firebase-creds.json');
 
@@ -6,19 +7,16 @@ admin.initializeApp({
   credential: admin.credential.cert(creds)
 });
 
-export interface Settings {
-  /**
-   * Interval in ms between every time the sensors are read and results sent to Firestore
-   */
-  pollingRate: number;
-  /**
-   * Temperature control for the thermostat
-   */
-  targetTemp: number;
-}
-
 export interface Entry {
   humidity: number;
+  /**
+   * If `true` this was logged for `Thermostat`'s initial check
+   */
+  initial?: boolean;
+  /**
+   * Is the compressor running?
+   */
+  cooling: boolean;
   temperature: number;
   time: number;
 }

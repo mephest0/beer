@@ -1,12 +1,12 @@
 import Koa from 'koa'
 import serve from 'koa-static'
 import { join } from 'path'
-import { toggleRelay } from './relay'
-import { getSettings, sendEntry } from './firebase'
+import { thermostat } from './thermostat'
 
 const PORT_NUMBER = 31337
 
 const app = new Koa()
+thermostat.start()
 
 // timer-and-error middleware
 app.use(async (ctx, next) => {
@@ -26,30 +26,35 @@ app.use(async (ctx, next) => {
 // api call handler, or pass on to static file middleware
 app.use(async (ctx, next) => {
   // all other requests than those for /api/* are passed on
-  if (!ctx.request.path.startsWith('/api/')) return await next();
-
+  if (!ctx.request.path.startsWith('/api/')) return await next()
+  
   const path = ctx.request.path
     .replace(/^\/api\//, '')
     .replace(/\/$/, '')
-
+  
   console.log('api path [' + path + ']')
   switch (path) {
-    case 'now':
-    case 'current':
-      // TODO insert logic
-      ctx.body = { 'probe0': 69 }
+    case 'get_running':
+      ctx.body = thermostat.isRunning()
       break
-    case 'toggle':
-      toggleRelay()
+    case 'get_sensors':
+      ctx.body = thermostat.getSensorData()
       break
-    case 'firestore_test':
-      await sendEntry({ humidity: Date.now() % 13, temperature: Date.now() % 37 });
-      ctx.body = { ok: true, mockData: true };
-      break;
     case 'get_settings':
-      ctx.body = await getSettings();
-      ctx.body.timestamp = Date.now();
-      break;
+      ctx.body = thermostat.getSettings()
+      break
+    case 'start':
+      await thermostat.start()
+      ctx.body = { ok: true }
+      break
+    case 'start_force':
+      await thermostat.start(true)
+      ctx.body = { ok: true }
+      break
+    case 'stop':
+      await thermostat.stop()
+      ctx.body = { ok: true }
+      break
     default:
       throw new Error(`API call for unsupported request [${path}]`)
   }
