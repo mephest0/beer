@@ -22,24 +22,48 @@ export interface Settings {
 }
 
 class Thermostat {
+  /**
+   * Is cooling turned on?
+   * @private
+   */
   private cooling = false
+  /**
+   * @see isRunning
+   * @private
+   */
   private running = false
   private sensorData: SensorData
   private settings: Settings
-  private timeout: NodeJS.Timeout
+  /**
+   * Holds the Timeout used for timing thermostat updates
+   * @private
+   */
+  private timeout?: NodeJS.Timeout
   
+  /**
+   * Is this `Thermostat` running?
+   */
   isRunning = () => this.running
   
+  /**
+   * Returns the sensor data, updated last time thermostat updated
+   */
   getSensorData = () => this.sensorData
   
+  /**
+   * Returns the settings used for thermostat's last update
+   */
   getSettings = () => this.settings
   
+  /**
+   * Starts the thermostat logic and makes sure it keeps on running
+   * @param force
+   */
   start = async (force?: boolean)  => {
+    console.log('### Thermostat.start()')
     if (this.running && !force) throw new Error('Thermostat is already running')
-
+  
     try {
-      console.log('### Thermostat.start()')
-      
       await this.tick()
 
       console.log('+ Started successfully')
@@ -51,6 +75,9 @@ class Thermostat {
     }
   }
   
+  /**
+   * Stops the thermostat from running and makes sure cooling is turned off
+   */
   stop = async () => {
     clearTimeout(this.timeout)
     this.running = false
@@ -59,6 +86,9 @@ class Thermostat {
     return true
   }
   
+  /**
+   * Updates settings and sensor data. Turns on/off cooling based on this.
+   */
   private tick = async () => {
     console.log('### Thermostat.tick()')
 
@@ -96,12 +126,12 @@ class Thermostat {
   
   private updateSensorData = async () => {
     this.sensorData = await getSensors()
-    console.log('Thermostat.updateSensorData()', this.sensorData);
+    console.log('. Thermostat.updateSensorData()', this.sensorData)
   }
   
   private updateSettings = async () => {
     this.settings = await getSettings()
-    console.log('Thermostat.updateSettings()', this.settings)
+    console.log('. Thermostat.updateSettings()', this.settings)
   }
 }
 
