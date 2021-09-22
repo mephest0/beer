@@ -12,18 +12,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.thermostat = void 0;
 const firebase_1 = require("./firebase");
 const sensors_1 = require("./sensors");
+const relay_1 = require("./relay");
 class Thermostat {
     constructor() {
+        /**
+         * Is cooling turned on?
+         * @private
+         */
         this.cooling = false;
+        /**
+         * @see isRunning
+         * @private
+         */
         this.running = false;
+        /**
+         * Is this `Thermostat` running?
+         */
         this.isRunning = () => this.running;
+        /**
+         * Returns the sensor data, updated last time thermostat updated
+         */
         this.getSensorData = () => this.sensorData;
+        /**
+         * Returns the settings used for thermostat's last update
+         */
         this.getSettings = () => this.settings;
+        /**
+         * Starts the thermostat logic and makes sure it keeps on running
+         * @param force
+         */
         this.start = (force) => __awaiter(this, void 0, void 0, function* () {
+            console.log('### Thermostat.start()');
             if (this.running && !force)
                 throw new Error('Thermostat is already running');
             try {
-                console.log('### Thermostat.start()');
                 yield this.tick();
                 console.log('+ Started successfully');
             }
@@ -33,12 +55,19 @@ class Thermostat {
                 throw e;
             }
         });
+        /**
+         * Stops the thermostat from running and makes sure cooling is turned off
+         */
         this.stop = () => __awaiter(this, void 0, void 0, function* () {
             clearTimeout(this.timeout);
             this.running = false;
-            // if (this.#cooling) await setRelay(0)
+            if (this.cooling)
+                yield (0, relay_1.setRelay)(0);
             return true;
         });
+        /**
+         * Updates settings and sensor data. Turns on/off cooling based on this.
+         */
         this.tick = () => __awaiter(this, void 0, void 0, function* () {
             console.log('### Thermostat.tick()');
             if (this.timeout)
@@ -62,19 +91,18 @@ class Thermostat {
                 entry.initial = true;
             yield (0, firebase_1.sendEntry)(entry);
             this.running = true;
-            // await setRelay(needCooling)
-            console.log('needCooling', needCooling);
+            yield (0, relay_1.setRelay)(needCooling);
             this.cooling = needCooling;
             // tick tock
             this.timeout = setTimeout(this.tick, needCooling ? this.settings.runFor : this.settings.pollingRate);
         });
         this.updateSensorData = () => __awaiter(this, void 0, void 0, function* () {
             this.sensorData = yield (0, sensors_1.getSensors)();
-            console.log('Thermostat.updateSensorData()', this.sensorData);
+            console.log('. Thermostat.updateSensorData()', this.sensorData);
         });
         this.updateSettings = () => __awaiter(this, void 0, void 0, function* () {
             this.settings = yield (0, firebase_1.getSettings)();
-            console.log('Thermostat.updateSettings()', this.settings);
+            console.log('. Thermostat.updateSettings()', this.settings);
         });
     }
 }

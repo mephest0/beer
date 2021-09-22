@@ -1,5 +1,6 @@
 import Koa from 'koa'
 import serve from 'koa-static'
+import { handleApi } from './api'
 import { join } from 'path'
 import { thermostat } from './thermostat'
 
@@ -11,6 +12,7 @@ thermostat.start()
 // timer-and-error middleware
 app.use(async (ctx, next) => {
   const time = Date.now()
+  console.log(`. got request to [${ctx.request.path}] from ${ctx.request.ip}`)
   
   try {
     await next()
@@ -20,7 +22,8 @@ app.use(async (ctx, next) => {
     console.error(e)
   }
   
-  console.log(`Request to ${ctx.request.path} took ${Date.now() - time}ms`)
+  if (ctx.response.type === 'application/json') ctx.body.requestTook = Date.now() - time
+  console.log(`. request to [${ctx.request.path}] took ${Date.now() - time}ms`)
 })
 
 // api call handler, or pass on to static file middleware
@@ -31,34 +34,8 @@ app.use(async (ctx, next) => {
   const path = ctx.request.path
     .replace(/^\/api\//, '')
     .replace(/\/$/, '')
-  
-  console.log('api path [' + path + ']')
-  switch (path) {
-    case 'get_running':
-      ctx.body = thermostat.isRunning()
-      break
-    case 'get_sensors':
-      ctx.body = thermostat.getSensorData()
-      break
-    case 'get_settings':
-      ctx.body = thermostat.getSettings()
-      break
-    case 'start':
-      await thermostat.start()
-      ctx.body = { ok: true }
-      break
-    case 'start_force':
-      await thermostat.start(true)
-      ctx.body = { ok: true }
-      break
-    case 'stop':
-      await thermostat.stop()
-      ctx.body = { ok: true }
-      break
-    default:
-      throw new Error(`API call for unsupported request [${path}]`)
-  }
-  
+
+  ctx.body = await handleApi(path)
   ctx.response.type = 'application/json'
 })
 

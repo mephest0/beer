@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const koa_1 = __importDefault(require("koa"));
 const koa_static_1 = __importDefault(require("koa-static"));
+const api_1 = require("./api");
 const path_1 = require("path");
 const thermostat_1 = require("./thermostat");
 const PORT_NUMBER = 31337;
@@ -22,6 +23,7 @@ thermostat_1.thermostat.start();
 // timer-and-error middleware
 app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
     const time = Date.now();
+    console.log(`. got request to [${ctx.request.path}] from ${ctx.request.ip}`);
     try {
         yield next();
     }
@@ -30,7 +32,9 @@ app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
         ctx.status = 400;
         console.error(e);
     }
-    console.log(`Request to ${ctx.request.path} took ${Date.now() - time}ms`);
+    if (ctx.response.type === 'application/json')
+        ctx.body.requestTook = Date.now() - time;
+    console.log(`. request to [${ctx.request.path}] took ${Date.now() - time}ms`);
 }));
 // api call handler, or pass on to static file middleware
 app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,32 +44,7 @@ app.use((ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
     const path = ctx.request.path
         .replace(/^\/api\//, '')
         .replace(/\/$/, '');
-    console.log('api path [' + path + ']');
-    switch (path) {
-        case 'get_running':
-            ctx.body = thermostat_1.thermostat.isRunning();
-            break;
-        case 'get_sensors':
-            ctx.body = thermostat_1.thermostat.getSensorData();
-            break;
-        case 'get_settings':
-            ctx.body = thermostat_1.thermostat.getSettings();
-            break;
-        case 'start':
-            yield thermostat_1.thermostat.start();
-            ctx.body = { ok: true };
-            break;
-        case 'start_force':
-            yield thermostat_1.thermostat.start(true);
-            ctx.body = { ok: true };
-            break;
-        case 'stop':
-            yield thermostat_1.thermostat.stop();
-            ctx.body = { ok: true };
-            break;
-        default:
-            throw new Error(`API call for unsupported request [${path}]`);
-    }
+    ctx.body = yield (0, api_1.handleApi)(path);
     ctx.response.type = 'application/json';
 }));
 // static file handler
