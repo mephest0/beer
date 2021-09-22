@@ -1,11 +1,15 @@
+import sensor from 'node-dht-sensor'
+
 export interface SensorData {
   humidity: number;
   temperature: number;
 }
 
-export const getSensors = async (): Promise<SensorData> => {
-  // TODO Get better sensor data
-  await new Promise(resolve => setTimeout(resolve, 3000));
-  
-  return { humidity: Date.now() % 13, temperature: Date.now() % 37 } as SensorData;
-}
+export const getSensors = async (): Promise<SensorData> =>
+  new Promise<SensorData>((resolve, reject) => {
+    sensor.read(11, 17, (err: any, temperature: number, humidity: number) => {
+      if (err) reject(err)
+      
+      resolve({ humidity, temperature })
+    })
+  })
