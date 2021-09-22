@@ -1,5 +1,9 @@
 {
 	"name": "tick-test",
+	"repository": {
+		"url": "https://github.com/mephest0/beer"
+	},
+	"license": "MIT",
 	"main": "src/main.js",
 	"scripts": {
 		"build": "tsc",
