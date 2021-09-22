@@ -1,5 +1,6 @@
 import { Entry, getSettings, sendEntry } from './firebase'
 import { getSensors, SensorData } from './sensors'
+import { setRelay } from './relay'
 
 export interface Settings {
   /**
@@ -53,7 +54,7 @@ class Thermostat {
   stop = async () => {
     clearTimeout(this.timeout)
     this.running = false
-    // if (this.#cooling) await setRelay(0)
+    if (this.cooling) await setRelay(0)
     
     return true
   }
@@ -84,8 +85,7 @@ class Thermostat {
     
     this.running = true
     
-    // await setRelay(needCooling)
-    console.log('needCooling', needCooling)
+    await setRelay(needCooling)
     this.cooling = needCooling
 
     // tick tock
