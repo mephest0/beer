@@ -1,5 +1,4 @@
-import { Firestore } from '@google-cloud/firestore'
-import creds from '../firebase-creds.json'
+import Firestore from '@google-cloud/firestore/build/src';
 
 const firestore = new Firestore()
 
