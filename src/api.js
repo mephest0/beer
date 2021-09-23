@@ -1,7 +1,7 @@
-import { thermostat } from './thermostat'
+import { thermostat } from './thermostat.js'
 
-export const handleApi = async (request: string): Promise<Record<string, any>> => {
-  let ret: Record<string, any>
+export const handleApi = async (request) => {
+  let ret;
   
   try {
     switch (request) {

@@ -1,44 +1,25 @@
-import { Entry, getSettings, sendEntry } from './firebase'
-import { getSensors, SensorData } from './sensors'
-import { setRelay } from './relay'
-
-export interface Settings {
-  /**
-   * Temperature above `targetTemp + maxDelta` will cause the compressor to start
-   */
-  maxDelta: number
-  /**
-   * Interval in ms between every time the sensors are read and results sent to Firestore
-   */
-  pollingRate: number
-  /**
-   * Time in ms to run the compressor for before checking again
-   */
-  runFor: number
-  /**
-   * Temperature control for the thermostat
-   */
-  targetTemp: number
-}
+import { getSettings, sendEntry } from './firebase.js'
+import { getSensors } from './sensors.js'
+import { setRelay } from './relay.js'
 
 class Thermostat {
   /**
    * Is cooling turned on?
    * @private
    */
-  private cooling = false
+  cooling = false
   /**
    * @see isRunning
    * @private
    */
-  private running = false
-  private sensorData: SensorData
-  private settings: Settings
+  running = false
+  sensorData
+  settings = undefined
   /**
    * Holds the Timeout used for timing thermostat updates
    * @private
    */
-  private timeout?: NodeJS.Timeout
+  timeout = undefined
   
   /**
    * Is this `Thermostat` running?
@@ -59,12 +40,12 @@ class Thermostat {
    * Starts the thermostat logic and makes sure it keeps on running
    * @param force
    */
-  start = async (force?: boolean)  => {
+  start = async (force)  => {
     console.log('### Thermostat.start()')
     if (this.running && !force) throw new Error('Thermostat is already running')
   
     try {
-      await this.tick()
+      await this._tick()
 
       console.log('+ Started successfully')
     } catch (e) {
@@ -89,11 +70,11 @@ class Thermostat {
   /**
    * Updates settings and sensor data. Turns on/off cooling based on this.
    */
-  private tick = async () => {
+  _tick = async () => {
     console.log('### Thermostat.tick()')
 
     if (this.timeout) clearTimeout(this.timeout)
-    await Promise.all([this.updateSensorData(), this.updateSettings()])
+    await Promise.all([this._updateSensorData(), this._updateSettings()])
     
     // Sanity checks
     if (!this.sensorData) throw new Error('Missing sensor data')
@@ -107,11 +88,11 @@ class Thermostat {
       this.sensorData.temperature > this.settings.targetTemp + this.settings.maxDelta
     
     // Update Firestore and clean up
-    const entry: Partial<Omit<Entry, 'time'>> = this.sensorData
+    const entry = this.sensorData
     entry.cooling = needCooling
 
     if (!this.running) entry.initial = true
-    await sendEntry(entry as Entry)
+    await sendEntry(entry)
     
     this.running = true
     
@@ -120,16 +101,16 @@ class Thermostat {
 
     // tick tock
     this.timeout = setTimeout(
-      this.tick,
+      this._tick,
       needCooling ? this.settings.runFor : this.settings.pollingRate)
   }
   
-  private updateSensorData = async () => {
+  _updateSensorData = async () => {
     this.sensorData = await getSensors()
     console.log('. Thermostat.updateSensorData()', this.sensorData)
   }
   
-  private updateSettings = async () => {
+  _updateSettings = async () => {
     this.settings = await getSettings()
     console.log('. Thermostat.updateSettings()', this.settings)
   }

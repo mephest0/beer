@@ -1,13 +1,13 @@
 import Koa from 'koa'
 import serve from 'koa-static'
-import { handleApi } from './api'
+import { handleApi } from './api.js'
 import { join } from 'path'
-import { thermostat } from './thermostat'
+import { thermostat } from './thermostat.js'
 
 const PORT_NUMBER = 31337
 
 const app = new Koa()
-thermostat.start()
+// thermostat.start()
 
 // timer-and-error middleware
 app.use(async (ctx, next) => {
