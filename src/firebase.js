@@ -1,6 +1,10 @@
-import Firestore from '@google-cloud/firestore/build/src';
+import firebase from 'firebase-admin'
+import creds from '../firebase-creds.json'
 
-const firestore = new Firestore()
+firebase.initializeApp({
+  credential: firebase.credential.cert(creds)
+})
+const firestore = firebase.firestore()
 
 const getFirestore = () => firestore
 

@@ -9,7 +9,7 @@
 		"start": "node --experimental-modules --es-module-specifier-resolution=node --experimental-json-modules src/main.js"
 	},
 	"dependencies": {
-		"@google-cloud/firestore": "^4.15.1",
+		"firebase-admin": "^9.11.1",
 		"koa": "^2.13.1",
 		"koa-static": "^5.0.0",
 		"rpio": "^2.4.2"
