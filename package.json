@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"scripts": {
 		"ip": "netplan ip leases wlan0 | grep '^ADDRESS'",
-		"start": "node --es-module-specifier-resolution=node --experimental-json-modules src/main.js"
+		"start": "node --experimental-modules --es-module-specifier-resolution=node --experimental-json-modules src/main.js"
 	},
 	"dependencies": {
 		"@google-cloud/firestore": "^4.15.1",
