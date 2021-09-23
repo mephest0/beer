@@ -1,10 +1,11 @@
-import firebase from 'firebase-admin'
+import admin from 'firebase-admin'
 import creds from '../firebase-creds.json'
 
-firebase.initializeApp({
-  credential: firebase.credential.cert(creds)
+admin.initializeApp({
+  credential: admin.credential.cert(creds)
 })
-const firestore = firebase.firestore()
+
+const firestore = admin.firestore()
 
 const getFirestore = () => firestore
 
