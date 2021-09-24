@@ -1,23 +1,23 @@
 {
-	"name": "tick-test",
-	"repository": {
-		"url": "https://github.com/mephest0/beer"
-	},
-	"license": "MIT",
-	"scripts": {
-		"ip": "netplan ip leases wlan0 | grep '^ADDRESS'",
-		"start": "node --experimental-modules --es-module-specifier-resolution=node --experimental-json-modules src/main.js"
-	},
-	"dependencies": {
-		"firebase-admin": "^9.11.1",
-		"koa": "^2.13.1",
-		"koa-static": "^5.0.0",
-		"rpio": "^2.4.2"
-	},
-	"devDependencies": {
-		"@types/koa": "^2.13.4",
-		"@types/koa-static": "^4.0.2",
-		"@types/rpio": "^2.4.2"
-	},
-	"type": "module"
+  "name": "tick-test",
+  "repository": {
+    "url": "https://github.com/mephest0/beer"
+  },
+  "license": "MIT",
+  "scripts": {
+    "ip": "netplan ip leases wlan0 | grep '^ADDRESS'",
+    "start": "node --experimental-modules --es-module-specifier-resolution=node --experimental-json-modules src/main.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^9.11.1",
+    "koa": "^2.13.1",
+    "koa-static": "^5.0.0",
+    "rpio": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.4",
+    "@types/koa-static": "^4.0.2",
+    "@types/rpio": "^2.4.2"
+  },
+  "type": "module"
 }
