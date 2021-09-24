@@ -2,7 +2,7 @@ import admin from 'firebase-admin'
 import creds from '../firebase-creds.json'
 
 admin.initializeApp({
-  credential: admin.credential.cert(creds)
+  credential: admin.credential.cert(creds),
 })
 
 const firestore = admin.firestore()
@@ -14,7 +14,7 @@ export const sendEntry = (entry) =>
     .collection('entries')
     .add({
       time: Date.now(),
-      ...entry
+      ...entry,
     })
 
 export const getSettings = async () => {
@@ -36,12 +36,3 @@ export const getSettings = async () => {
   
   return data
 }
-
-(async () => {
-  console.log('performing test read/write')
-  const settings = await getSettings()
-  console.log('### settings')
-  console.log(settings)
-  
-  await sendEntry({ humidity: 1337, temperature: 69, cooling: false })
-})()
