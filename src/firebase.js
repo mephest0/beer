@@ -20,9 +20,21 @@ export const sendEntry = (entry) =>
 export const getSettings = async () => {
   const settingsSnap = await getFirestore().doc('control/panel').get()
   
-  if (!settingsSnap.exists) throw new Error('Settings document does not exist')
+  if (!settingsSnap.exists)
+    throw new Error('Settings document does not exist')
   
-  return settingsSnap.data()
+  const data = settingsSnap.data()
+  
+  if (!data.targetTemp)
+    throw new Error('Missing targetTemp field in settings')
+  if (!data.maxDelta)
+    throw new Error('Missing maxDelta field in settings')
+  if (!data.runFor)
+    throw new Error('Missing runFor field in settings')
+  if (!data.pollingRate)
+    throw new Error('Missing pollingRate field in settings')
+  
+  return data
 }
 
 (async () => {
