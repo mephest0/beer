@@ -40,13 +40,13 @@ class Thermostat {
    * Starts the thermostat logic and makes sure it keeps on running
    * @param force
    */
-  start = async (force)  => {
+  start = async (force) => {
     console.log('### Thermostat.start()')
     if (this.running && !force) throw new Error('Thermostat is already running')
-  
+    
     try {
       await this._tick()
-
+      
       console.log('+ Started successfully')
     } catch (e) {
       console.error('- Failed to start :(')
@@ -72,7 +72,7 @@ class Thermostat {
    */
   _tick = async () => {
     console.log('### Thermostat.tick()')
-
+    
     if (this.timeout) clearTimeout(this.timeout)
     await Promise.all([this._updateSensorData(), this._updateSettings()])
     
@@ -90,7 +90,7 @@ class Thermostat {
     // Update Firestore and clean up
     const entry = this.sensorData
     entry.cooling = needCooling
-
+    
     if (!this.running) entry.initial = true
     await sendEntry(entry)
     
@@ -98,7 +98,7 @@ class Thermostat {
     
     await setRelay(needCooling)
     this.cooling = needCooling
-
+    
     // tick tock
     this.timeout = setTimeout(
       this._tick,

@@ -2,7 +2,7 @@ import Koa from 'koa'
 import serve from 'koa-static'
 import { handleApi } from './api.js'
 import { join } from 'path'
-import { thermostat } from './thermostat.js'
+// import { thermostat } from './thermostat.js';
 
 const PORT_NUMBER = 31337
 
@@ -12,7 +12,7 @@ const app = new Koa()
 // timer-and-error middleware
 app.use(async (ctx, next) => {
   const time = Date.now()
-  console.log(`. got request to [${ctx.request.path}] from ${ctx.request.ip}`)
+  console.log(`. got request to [${ ctx.request.path }] from ${ ctx.request.ip }`)
   
   try {
     await next()
@@ -23,7 +23,7 @@ app.use(async (ctx, next) => {
   }
   
   if (ctx.response.type === 'application/json') ctx.body.requestTook = Date.now() - time
-  console.log(`. request to [${ctx.request.path}] took ${Date.now() - time}ms`)
+  console.log(`. request to [${ ctx.request.path }] took ${ Date.now() - time }ms`)
 })
 
 // api call handler, or pass on to static file middleware
@@ -34,7 +34,7 @@ app.use(async (ctx, next) => {
   const path = ctx.request.path
     .replace(/^\/api\//, '')
     .replace(/\/$/, '')
-
+  
   ctx.body = await handleApi(path)
   ctx.response.type = 'application/json'
 })
@@ -43,4 +43,4 @@ app.use(async (ctx, next) => {
 app.use(serve(join('./static'), { defer: true }))
 
 app.listen(PORT_NUMBER)
-console.log(`all set up, listening on port ${PORT_NUMBER}`)
+console.log(`all set up, listening on port ${ PORT_NUMBER }`)

@@ -1,4 +1,5 @@
 import rpio from 'rpio'
+
 const COOLER_RELAY_GPIO = 7
 
 rpio.open(COOLER_RELAY_GPIO, rpio.OUTPUT, rpio.LOW)

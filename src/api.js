@@ -27,7 +27,7 @@ export const handleApi = async (request) => {
         ret = { ok: true }
         break
       default:
-        throw new Error(`API call for unsupported request [${request}]`)
+        throw new Error(`API call for unsupported request [${ request }]`)
     }
   } catch (e) {
     console.error('! Error in API handler.', e)
