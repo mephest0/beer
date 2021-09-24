@@ -1,16 +1,11 @@
 # Fridge controller
 
-Add `firebase-creds.json` for your Firebase Project to the root dir, and you're all set. Firestore needs to have been enabled.
+Add `firebase-creds.json` for your Firebase Project to the root dir, and you're all set. Firestore needs to have already been enabled for your Project.
 
 ## Node scripts
 
-* `build` Builds the project
-* `start` Runs the project, without a build
+* `start` Runs the project
 * `ip` Prints the devices IP address. Uses netplan (Ubuntu Server 21).
-
-## Dist folder
-
-Because of some devices with too little working memory to run TSC, the `dist` folder is also tracked. Please build locally if possible.
 
 ## Firestore
 
