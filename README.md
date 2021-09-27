@@ -21,9 +21,24 @@ Every time the temperature and humidity is read, the results are stored in the `
 
 `todo`
 
+## Big ups
+
+This project was built with a lot of inspiration* from the Intertubes. Here is a short list of our sources of inspiration:
+
+* [Hackaday](https://hackaday.com)
+  * For general encouragement of the hacking spirit
+* [BrewPi](https://www.brewpi.com)
+  * For setting a great example of what the limits are and how TF refrigerators work
+* GitHub's [jperkin](https://github.com/jperkin)
+  * And their library [RPIO](https://www.npmjs.com/package/rpio), without which cooling wouldn't at all be possible (so cool)
+* GitHub's [momenso](https://github.com/momenso)
+  * Whose node-dht-sensor library and documentation has saved us a lot of time on both electronics and coding!
+* [The Raspberry Pi Foundation](https://www.raspberrypi.org/)
+  * ...where to even start?!
+
 ## License
 
-Do whatever you wish. MIT License or whatever 🤷‍♀️
+Do what you wish. MIT License or whatever 🤷‍♀️
 
 ## On the roadmap
 
