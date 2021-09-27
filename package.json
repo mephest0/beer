@@ -10,14 +10,10 @@
   },
   "dependencies": {
     "firebase-admin": "^9.11.1",
-    "koa": "^2.13.1",
+    "koa": "^2.13.3",
     "koa-static": "^5.0.0",
+    "node-dht-sensor": "^0.4.3",
     "rpio": "^2.4.2"
-  },
-  "devDependencies": {
-    "@types/koa": "^2.13.4",
-    "@types/koa-static": "^4.0.2",
-    "@types/rpio": "^2.4.2"
   },
   "type": "module"
 }

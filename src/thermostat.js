@@ -106,13 +106,13 @@ class Thermostat {
   }
   
   _updateSensorData = async () => {
-    this.sensorData = await getSensors()
+    // Update, or, if that fails keep old temps
+    this.sensorData = (await getSensors()) || this.sensorData
     console.log('. Thermostat.updateSensorData()', this.sensorData)
   }
   
   _updateSettings = async () => {
     this.settings = await getSettings()
-    console.log('. Thermostat.updateSettings()', this.settings)
   }
 }
 
