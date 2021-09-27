@@ -65,3 +65,4 @@ Do what you wish. MIT License or whatever 🤷‍♀️
 * Door sensor
 * Environment variables for GPIO ports, Firebase creds
 * (Optional) ditching of Firestore for settings, could be set via environment variables or local defaults-file
+* Turn off compressor when shutting down
