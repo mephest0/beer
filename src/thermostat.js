@@ -106,8 +106,9 @@ class Thermostat {
   }
   
   _updateSensorData = async () => {
-    // Update, or, if that fails keep old temps
+    // Update, or, if that fails keep old temps (potentially not smart if it keeps failing)
     this.sensorData = (await getSensors()) || this.sensorData
+
     console.log('. Thermostat.updateSensorData()', this.sensorData)
   }
   
