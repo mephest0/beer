@@ -36,6 +36,22 @@ This project was built with a lot of inspiration* from the Intertubes. Here is a
 * [The Raspberry Pi Foundation](https://www.raspberrypi.org/)
   * ...where to even start?!
 
+## Notes
+
+The unit we used, an the 512 mb RPI 3A+, didn't have enough mbs. Creating a swap partition on the memory card (not recommended!) solved this. Here's how to set that up (using Ubuntu Server 21):
+* `sudo fallocate -l 1G /swapspace`
+  * To set up 1 gig of swap
+* `sudo chmod 600 /swapspace`
+  * So read/write permissions are as they should
+* `sudo mkswap /swapspace`
+  * ..or else the swap area would not be used for just that
+* `sudo swapon /swapspace`
+  * ..or else the swap area would not be used
+* Add the line `/swapspace swap swap defaults 0 0` to the file `/etc/swap`
+  * So that it is used again after reboot
+
+To verify that a swap area has been created and is in use, run the command `sudo swapon --show`. If you can not see it, try rebooting.
+
 ## License
 
 Do what you wish. MIT License or whatever 🤷‍♀️
