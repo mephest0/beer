@@ -90,6 +90,7 @@ class Thermostat {
     // Update Firestore and clean up
     const entry = this.sensorData
     entry.cooling = needCooling
+    entry.targetTemp = this.settings.targetTemp
     
     if (!this.running) entry.initial = true
     await sendEntry(entry)
