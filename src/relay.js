@@ -5,7 +5,7 @@ const COOLER_RELAY_GPIO = 7
 rpio.open(COOLER_RELAY_GPIO, rpio.OUTPUT, rpio.LOW)
 
 export const setRelay = (state) => {
-  const nuValue = state ? 1 : 0
+  const nuValue = state ? 0 : 1
   const current = readRelay()
   
   if (nuValue !== current) {
